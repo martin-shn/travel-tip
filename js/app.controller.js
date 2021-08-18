@@ -1,5 +1,6 @@
-import { locService } from './services/loc.service.js'
-import { mapService } from './services/map.service.js'
+import { locService } from './services/loc.service.js';
+import { mapService } from './services/map.service.js';
+import { storageService } from './services/storage-service.js';
 
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
@@ -9,12 +10,14 @@ window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
 window.test = test;
 
-function test(){
-    return mapService.getCurrPos()
+function test() {
+    let a = locService.searchLoc('tel aviv');
+    console.log(a);
 }
 
 function onInit() {
-    mapService.initMap()
+    mapService
+        .initMap()
         .then(() => {
             console.log('Map is ready');
             console.log(MAPS_API);
@@ -23,39 +26,38 @@ function onInit() {
 }
 
 function onSearch() {
-    var elInput = document.querySelector('.search')
+    var elInput = document.querySelector('.search');
     if (!elInput.value.trim()) return;
 
-    // searchLoc(elInput.value.trim());
-    elInput.value = ''
-    locService.getLocs()
-        .then(locs => {
-            onRenderLocations(locs)
-            // document.querySelector('.locs').innerText = JSON.stringify(locs)
-
-        })
-
+    locService.searchLoc(elInput.value.trim());
+    // elInput.value = '';
+    locService.getLocs().then((locs) => {
+        onRenderLocations(locs);
+        // document.querySelector('.locs').innerText = JSON.stringify(locs)
+    });
 }
 
 function onRenderLocations(locs) {
-    let strHtmls = locs.map((loc) => {
-        return `<tr>
+    let strHtmls = locs
+        .map((loc) => {
+            return `<tr>
         <td>${loc.name}</td>
-        <td>${loc.lat}</td>
-        <td>${loc.lng}</td>
+        <td>${loc.lat.toFixed(2)}</td>
+        <td>${loc.lng.toFixed(2)}</td>
         <td><button onclick="onShowLoc(${loc.id})">GO</button></td>
         <td><button onclick="onDelLoc(${loc.id})">Delte</button></td>
-        </tr>`
-    }).join('')
-    document.querySelector('.locs-table').innerHTML = strHtmls
+        </tr>`;
+        })
+        .join('');
+    document.querySelector('.locs-table').innerHTML = strHtmls;
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
     console.log('Getting Pos');
     return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
 }
 
 function onAddMarker() {
@@ -64,24 +66,21 @@ function onAddMarker() {
 }
 
 function onGetLocs() {
-    locService.getLocs()
-        .then(locs => {
-            console.log('Locations:', locs)
-            // document.querySelector('.locs').innerText = JSON.stringify(locs)
-
-        })
+    locService.getLocs().then((locs) => {
+        console.log('Locations:', locs);
+        // document.querySelector('.locs').innerText = JSON.stringify(locs)
+    });
 }
 
 function onGetUserPos() {
     getPosition()
-        .then(pos => {
+        .then((pos) => {
             console.log('User position is:', pos.coords);
-            document.querySelector('.user-pos').innerText =
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            document.querySelector('.user-pos').innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
         })
-        .catch(err => {
+        .catch((err) => {
             console.log('err!!!', err);
-        })
+        });
 }
 function onPanTo() {
     console.log('Panning the Map');
