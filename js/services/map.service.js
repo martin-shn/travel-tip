@@ -3,6 +3,7 @@ export const mapService = {
     initMap,
     addMarker,
     panTo,
+    GetCurrPos,
  }
 
 var gMap;
