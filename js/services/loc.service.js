@@ -8,6 +8,13 @@ const locs = [
     { name: 'Neveragain', lat: 32.047201, lng: 34.832581 }
 ]
 
+function searchLoc(loc){
+
+
+
+    renderLocs();
+}
+
 function getLocs() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {

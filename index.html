@@ -11,10 +11,13 @@
             <div class="logo">TravelTip</div>
             <nav class="menu">
                 <input type="search" class="search" placeholder="Search..." autofocus />
-                <button class="btn-search">Search</button>
-                <button class="my-loc">My location</button>
+                <button class="btn-search" onclick="onSearch()">Search</button>
+                <button class="my-loc" >My location</button>
             </nav>
-            <div class="curr-location"><span>Location:</span></div>
+            <div class="curr-location">
+                <span>Location:</span>
+                <label></label>
+            </div>
             <button class="copy-loc">Copy location</button>
             <div class="weather"></div>
             <div id="map" class="map"></div>
@@ -27,7 +30,7 @@
                         <th>Go</th>
                         <th>Delete</th>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="locs-table"></tbody>
                 </table>
             </div>
         </div>
