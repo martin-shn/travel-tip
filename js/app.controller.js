@@ -29,7 +29,6 @@ function onSearch() {
             // document.querySelector('.locs').innerText = JSON.stringify(locs)
 
         })
-
 }
 
 function onRenderLocations(locs) {
