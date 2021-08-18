@@ -11,6 +11,7 @@ function onInit() {
     mapService.initMap()
         .then(() => {
             console.log('Map is ready');
+            console.log(MAPS_API);
         })
         .catch(() => console.log('Error: cannot init map'));
 }

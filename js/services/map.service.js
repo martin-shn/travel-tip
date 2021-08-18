@@ -1,4 +1,4 @@
-
+const localMapsApi=MAPS_API;
 
 export const mapService = {
     initMap,
