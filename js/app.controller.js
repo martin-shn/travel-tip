@@ -9,14 +9,12 @@ window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
 window.onMyLocation = onMyLocation;
+window.onDelLoc = onDelLoc;
 
 
 
 function onInit() {
-    locService.getLocs().then((locs) => {
-        onRenderLocations(locs);
-        // document.querySelector('.locs').innerText = JSON.stringify(locs)
-    });
+    renderLocTable();
     mapService
         .initMap()
         .then(() => {
@@ -33,6 +31,10 @@ function onSearch() {
     // searchLoc(elInput.value.trim());
     locService.searchLoc(elInput.value.trim());
     // elInput.value = '';
+    renderLocTable();
+}
+
+function renderLocTable(){
     locService.getLocs().then((locs) => {
         onRenderLocations(locs);
         // document.querySelector('.locs').innerText = JSON.stringify(locs)
@@ -58,8 +60,8 @@ function onRenderLocations(locs) {
         <td>${loc.name}</td>
         <td>${loc.lat.toFixed(2)}</td>
         <td>${loc.lng.toFixed(2)}</td>
-        <td><button onclick="onPanTo(${loc.lat},${loc.lng},${loc.name})">GO</button></td>
-        <td><button onclick="onDelLoc(${loc.id})">Delete</button></td>
+        <td><button onclick="onPanTo(${loc.lat},${loc.lng},'${loc.name}')">GO</button></td>
+        <td><button onclick="onDelLoc('${loc.id}')">Delete</button></td>
         </tr>`;
         })
         .join('');
@@ -103,7 +105,14 @@ function onPanTo(lat,lng,currLoc) {
     // updateWeather(loc)
 }
 
+function updateCurrLoc(currLoc){
+    document.querySelector('.curr-location label').innerText=currLoc;
+}
 
+function onDelLoc(locId){
+    locService.deleteLoc(locId);
+    renderLocTable();
+}
 // Swal.fire({
 //     title: 'Do you want to save this location in to your favorite list?',
 //     // icon: 'info',
