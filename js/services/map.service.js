@@ -4,13 +4,13 @@ export const mapService = {
     addMarker,
     panTo,
     getCurrPos,
- }
+}
 
 var gMap;
 
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
-    console.log('InitMap');
+    const myLatlng = { lat, lng };
     return _connectGoogleApi()
         .then(() => {
             console.log('google available');
@@ -19,8 +19,36 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
                 center: { lat, lng },
                 zoom: 15
             })
-            console.log('Map!', gMap);
+            onClickMap(myLatlng)
         })
+
+}
+
+function onClickMap(myLatlng) {
+    var clickedLoc='check';
+
+    // Create the initial InfoWindow.
+    let infoWindow = new google.maps.InfoWindow({
+        content: "Click the map to get Lat/Lng!",
+        position: myLatlng,
+    });
+    infoWindow.open(gMap);
+    // Configure the click listener.
+    clickedLoc = gMap.addListener("click", (mapsMouseEvent) => {
+        console.log(mapsMouseEvent.latLng);
+
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+            position: mapsMouseEvent.latLng,
+        });
+        infoWindow.setContent(
+            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+        );
+        infoWindow.open(gMap);
+    });
+
 }
 
 function addMarker(loc) {
@@ -31,6 +59,9 @@ function addMarker(loc) {
     });
     return marker;
 }
+function mapClicked() {
+
+}
 
 function panTo(lat, lng) {
     var laLatLng = new google.maps.LatLng(lat, lng);
@@ -38,9 +69,9 @@ function panTo(lat, lng) {
 }
 
 // var currPos;
-function getCurrPos(){
-    return navigator.geolocation.getCurrentPosition((pos)=>{
-        const currPos = {lat:pos.coords.latitude,lng:pos.coords.longitude};
+function getCurrPos() {
+    return navigator.geolocation.getCurrentPosition((pos) => {
+        const currPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         return new Promise(currPos);
     });
     // console.log('currpos:', currPos, 'a: ', a);

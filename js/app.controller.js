@@ -7,11 +7,9 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
-window.test = test;
+window.onMyLocation = onMyLocation;
 
-function test(){
-    return mapService.getCurrPos()
-}
+
 
 function onInit() {
     mapService.initMap()
@@ -34,6 +32,17 @@ function onSearch() {
             // document.querySelector('.locs').innerText = JSON.stringify(locs)
 
         })
+}
+
+function onMyLocation() {
+    getPosition()
+        .then(res => {
+            res = res.coords
+            mapService.panTo(res.latitude, res.longitude);
+            mapService.addMarker({ lat: res.latitude, lng: res.longitude });
+        })
+
+
 }
 
 function onRenderLocations(locs) {
