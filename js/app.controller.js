@@ -11,7 +11,7 @@ export const controller = {
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
-window.onGetLocs = onGetLocs;
+// window.onGetLocs = onGetLocs;
 // window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
 window.onMyLocation = onMyLocation;
@@ -34,6 +34,7 @@ function onInit() {
 function getUrlParams(){
     let queryStr=window.location.search;
     const urlParams = new URLSearchParams(queryStr);
+    if (!queryStr) return {lat: 32.0749831, lng: 34.9120554,currLoc:''};
     return {lat:+urlParams.get('lat'), lng:+urlParams.get('lng'), currLoc:urlParams.get('name')};
 }
 
