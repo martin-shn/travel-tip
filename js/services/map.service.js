@@ -1,3 +1,5 @@
+import { controller } from '../app.controller.js';
+import { locService } from './loc.service.js';
 
 export const mapService = {
     initMap,
@@ -25,30 +27,46 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
 }
 
 function onClickMap(myLatlng) {
-    var clickedLoc='check';
+    var clickedLoc = 'check';
 
     // Create the initial InfoWindow.
     let infoWindow = new google.maps.InfoWindow({
         content: "Click the map to get Lat/Lng!",
         position: myLatlng,
     });
-    infoWindow.open(gMap);
     // Configure the click listener.
     clickedLoc = gMap.addListener("click", (mapsMouseEvent) => {
-        console.log(mapsMouseEvent.latLng);
-
-        // Close the current InfoWindow.
-        infoWindow.close();
-        // Create a new InfoWindow.
-        infoWindow = new google.maps.InfoWindow({
-            position: mapsMouseEvent.latLng,
-        });
-        infoWindow.setContent(
-            JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-        );
-        infoWindow.open(gMap);
+        //get pos object 
+        const pos = mapsMouseEvent.latLng.toJSON()
+        savePopup(pos)
+        
     });
 
+}
+
+function savePopup(pos) {
+    Swal.fire({
+        title: 'Do you want to save this place?',
+        html: '<input type="text" placeholder="Location name" class="loc-name"/>',
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            const locName=document.querySelector('.loc-name').value;
+            locService.addLoc(locName,pos.lat,pos.lng)
+            Swal.fire({
+                title:'Saved!',
+                icon: 'success',
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                  },
+                });
+        }
+    })
+    .then(()=>controller.renderLocTable());
 }
 
 function addMarker(loc) {
