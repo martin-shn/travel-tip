@@ -11,7 +11,7 @@ export const mapService = {
 
 var gMap;
 const LINK_URL = 'https://${github_url}/index.html?lat=${lat}&lng=${lng}&name=${name}';
-const GITHUB_URL = 'martin-shn.github.io/travelTip';
+const GITHUB_URL = 'martin-shn.github.io/travel-tip';
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     const myLatlng = { lat, lng };
