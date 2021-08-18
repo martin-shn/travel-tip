@@ -36,7 +36,11 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng);
 }
 
-
+function GetCurrPos(){
+    let currPos;
+    navigator.geolocation.getCurrentPosition((pos)=>{currPos = {lat:pos.coords.latitude,lng:pos.coords.longitude}});
+    return currPos;
+}
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
