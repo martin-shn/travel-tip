@@ -2,6 +2,10 @@ import { locService } from './services/loc.service.js';
 import { mapService } from './services/map.service.js';
 import { storageService } from './services/storage-service.js';
 
+export const controller = {
+    renderLocTable
+}
+
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
@@ -34,7 +38,7 @@ function onSearch() {
     renderLocTable();
 }
 
-function renderLocTable(){
+function renderLocTable() {
     locService.getLocs().then((locs) => {
         onRenderLocations(locs);
         // document.querySelector('.locs').innerText = JSON.stringify(locs)
@@ -46,11 +50,8 @@ function onMyLocation() {
         .then(res => {
             res = res.coords
             mapService.panTo(res.latitude, res.longitude);
-            mapService.addMarker({ lat: res.latitude, lng: res.longitude });
+            onAddMarker(res.latitude, res.longitude);
         })
-
-
-    
 }
 
 function onRenderLocations(locs) {
@@ -76,9 +77,9 @@ function getPosition() {
     });
 }
 
-function onAddMarker() {
+function onAddMarker(lat, lng) {
     console.log('Adding a marker');
-    mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+    mapService.addMarker({ lat,lng });
 }
 
 function onGetLocs() {
@@ -98,8 +99,9 @@ function onGetUserPos() {
             console.log('err!!!', err);
         });
 }
-function onPanTo(lat,lng,currLoc) {
+function onPanTo(lat, lng, currLoc) {
     console.log('Panning the Map');
+    onAddMarker(lat,lng)
     mapService.panTo(lat, lng);
     updateCurrLoc(currLoc,lat,lng);
     // updateWeather(loc)
@@ -111,7 +113,7 @@ function updateCurrLoc(currLoc,lat,lng){
     document.querySelector('.curr-location label').dataset.lng=lng;
 }
 
-function onDelLoc(locId){
+function onDelLoc(locId) {
     locService.deleteLoc(locId);
     renderLocTable();
 }

@@ -27,7 +27,7 @@ function searchLoc(loc) {
                 locs[existedLoc].updatedAt = Date.now();
             } else {
                 //add a new loc
-                addLoc(res.data.results[0].place_id,res.data.results[0].formatted_address,res.data.results[0].geometry.location.lat,res.data.results[0].geometry.location.lng)
+                addLoc(res.data.results[0].formatted_address,res.data.results[0].geometry.location.lat,res.data.results[0].geometry.location.lng,res.data.results[0].place_id)
             }
         })
         .then(() => {
@@ -81,6 +81,7 @@ function deleteLoc(locId){
     }
 }
 
-function addLoc(id=makeId(),name,lat,lng){
+function addLoc(name,lat,lng,id=makeId()){
     locs.push({id,name,lat,lng,createdAt: Date.now()});
+    storageService.save('travelTipDB', locs);
 }
