@@ -1,40 +1,48 @@
 import { locService } from './services/loc.service.js';
 import { mapService } from './services/map.service.js';
 import { storageService } from './services/storage-service.js';
+import { weatherService } from './services/weather.service.js';
 
 export const controller = {
-    renderLocTable
-}
+    renderLocTable,
+    onWeatherUpdate
+};
 
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
-window.onGetUserPos = onGetUserPos;
+// window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
 window.onMyLocation = onMyLocation;
 window.onDelLoc = onDelLoc;
-
-
+window.onCopyLoc = onCopyLoc;
 
 function onInit() {
     renderLocTable();
     mapService
         .initMap()
         .then(() => {
-            console.log('Map is ready');
-            console.log(MAPS_API);
+            // console.log('Map is ready');
+            const urlPos = getUrlParams();
+            onPanTo(urlPos.lat, urlPos.lng, urlPos.currLoc)
+            onWeatherUpdate(urlPos.lat,urlPos.lng)
         })
         .catch(() => console.log('Error: cannot init map'));
+}
+
+function getUrlParams(){
+    let queryStr=window.location.search;
+    const urlParams = new URLSearchParams(queryStr);
+    return {lat:+urlParams.get('lat'), lng:+urlParams.get('lng'), currLoc:urlParams.get('name')};
 }
 
 function onSearch() {
     var elInput = document.querySelector('.search');
     if (!elInput.value.trim()) return;
 
-    // searchLoc(elInput.value.trim());
     locService.searchLoc(elInput.value.trim());
-    // elInput.value = '';
+    elInput.value = '';
     renderLocTable();
 }
 
@@ -46,12 +54,12 @@ function renderLocTable() {
 }
 
 function onMyLocation() {
-    getPosition()
-        .then(res => {
-            res = res.coords
-            mapService.panTo(res.latitude, res.longitude);
-            onAddMarker(res.latitude, res.longitude);
-        })
+    getPosition().then((res) => {
+        res = res.coords;
+        // console.log(res);
+        onPanTo(res.latitude, res.longitude,'Home');
+        onAddMarker(res.latitude, res.longitude);
+    });
 }
 
 function onRenderLocations(locs) {
@@ -71,72 +79,81 @@ function onRenderLocations(locs) {
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 function getPosition() {
-    console.log('Getting Pos');
+    // console.log('Getting Pos');
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
     });
 }
 
 function onAddMarker(lat, lng) {
-    console.log('Adding a marker');
-    mapService.addMarker({ lat,lng });
+    // console.log('Adding a marker');
+    mapService.addMarker({ lat, lng });
 }
 
-function onGetLocs() {
-    locService.getLocs().then((locs) => {
-        console.log('Locations:', locs);
-        // document.querySelector('.locs').innerText = JSON.stringify(locs)
-    });
-}
+// function onGetLocs() {
+//     locService.getLocs().then((locs) => {
+//         // console.log('Locations:', locs);
+//         // document.querySelector('.locs').innerText = JSON.stringify(locs)
+//     });
+// }
 
-function onGetUserPos() {
-    getPosition()
-        .then((pos) => {
-            console.log('User position is:', pos.coords);
-            document.querySelector('.user-pos').innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
-        })
-        .catch((err) => {
-            console.log('err!!!', err);
-        });
-}
+// function onGetUserPos() {
+//     getPosition()
+//         .then((pos) => {
+//             console.log('User position is:', pos.coords);
+//             document.querySelector('.user-pos').innerText = `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`;
+//         })
+//         .catch((err) => {
+//             console.log('err!!!', err);
+//         });
+// }
 function onPanTo(lat, lng, currLoc) {
-    console.log('Panning the Map');
-    onAddMarker(lat,lng)
+    // console.log('Panning the Map');
+    onAddMarker(lat, lng);
     mapService.panTo(lat, lng);
-    updateCurrLoc(currLoc,lat,lng);
-    // updateWeather(loc)
+    updateCurrLoc(currLoc, lat, lng);
+    onWeatherUpdate(lat,lng);
 }
 
-function updateCurrLoc(currLoc,lat,lng){
-    document.querySelector('.curr-location label').innerText=currLoc;
-    document.querySelector('.curr-location label').dataset.lat=lat;
-    document.querySelector('.curr-location label').dataset.lng=lng;
+function updateCurrLoc(currLoc, lat, lng) {
+    document.querySelector('.curr-location label').innerText = currLoc;
+    document.querySelector('.curr-location label').dataset.lat = lat;
+    document.querySelector('.curr-location label').dataset.lng = lng;
 }
 
 function onDelLoc(locId) {
-    locService.deleteLoc(locId);
-    renderLocTable();
+    locService.deleteLoc(locId)
+    .then(()=>{
+        // console.log('del promise ok');
+        renderLocTable();
+    });
 }
 
-function onCopyLoc(){
+function onCopyLoc() {
     const lat = document.querySelector('.curr-location label').dataset.lat;
     const lng = document.querySelector('.curr-location label').dataset.lng;
-    const url = getGithubUrl(lat,lng);
+    const locName = document.querySelector('.curr-location label').innerText;
+    const url = mapService.getGithubUrl(lat, lng, locName);
+
+    navigator.clipboard.writeText(url);
+    Swal.fire({
+        title:'Saved to clipboard!',
+        icon: 'success',
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading()
+          },
+    });
 }
 
-
-// Swal.fire({
-//     title: 'Do you want to save this location in to your favorite list?',
-//     // icon: 'info',
-//     html: 'Background color: ' + '<input type="color" class="theme"/>',
-//     showCloseButton: true,
-//     showCancelButton: true,
-//     focusConfirm: false,
-//     confirmButtonText: 'OK',
-//     confirmButtonAriaLabel: 'Thumbs up, great!',
-//     cancelButtonText: 'Cancel',
-//     cancelButtonAriaLabel: 'Thumbs down',
-// })
-//.then((res) => {
-//     if (res.isConfirmed) document.querySelector('body').style.backgroundColor = keepBright(document.querySelector('.theme').value);
-// });
+function onWeatherUpdate(lat,lng){
+    weatherService.getWeather(lat, lng).then((res)=>{
+        document.querySelector('.weather').innerHTML=`🌡Temp: ${(res.res.temp-273.15).toFixed(2)}°C <br>
+        <img src='${res.icon}'><br>
+        Feels like: ${(res.res.feels_like-273.15).toFixed(2)}°C <br>
+        Max temp: ${(res.res.temp_max-273.15).toFixed(2)}°C <br>
+        Min temp: ${(res.res.temp_min-273.15).toFixed(2)}°C <br>
+        `;
+    });
+}

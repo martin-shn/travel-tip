@@ -16,7 +16,7 @@ function searchLoc(loc) {
     axios
         .get(url)
         .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
             const existedLoc = locs.findIndex(function (loc, idx) {
                 return loc.id === res.data.results[0].place_id;
             });
@@ -29,6 +29,7 @@ function searchLoc(loc) {
                 //add a new loc
                 addLoc(res.data.results[0].formatted_address,res.data.results[0].geometry.location.lat,res.data.results[0].geometry.location.lng,res.data.results[0].place_id)
             }
+            onPanTo(res.data.results[0].geometry.location.lat, res.data.results[0].geometry.location.lng, res.data.results[0].formatted_address)
         })
         .then(() => {
             storageService.save('travelTipDB', locs);
@@ -58,7 +59,7 @@ function deleteLoc(locId){
         return loc.id === locId;
     });
     if (existedLoc >= 0) {
-        Swal.fire({
+        return Swal.fire({
                 title: 'Are you sure you want to delete this location?',
                 icon: 'question',
                 text: 'Location: ' + locs[existedLoc].name,
@@ -76,7 +77,8 @@ function deleteLoc(locId){
                     locs.splice(existedLoc,1);
                     storageService.save('travelTipDB', locs);
                 }
-            });
+            })
+            .then(Promise.resolve('OK'));
 
     }
 }

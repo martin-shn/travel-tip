@@ -6,23 +6,25 @@ export const mapService = {
     addMarker,
     panTo,
     getCurrPos,
+    getGithubUrl
 }
 
 var gMap;
-const LINK_URL = 'https://${github_url}/index.html?lat=${lat}&lng=${lng}';
+const LINK_URL = 'https://${github_url}/index.html?lat=${lat}&lng=${lng}&name=${name}';
 const GITHUB_URL = 'martin-shn.github.io/travelTip';
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     const myLatlng = { lat, lng };
     return _connectGoogleApi()
         .then(() => {
-            console.log('google available');
+            // console.log('google available');
             gMap = new google.maps.Map(
                 document.querySelector('#map'), {
                 center: { lat, lng },
                 zoom: 15
             })
             onClickMap(myLatlng)
+            controller.onWeatherUpdate(lat,lng);
         })
 
 }
@@ -111,6 +113,6 @@ function _connectGoogleApi() {
     })
 }
 
-function getGithubUrl(lat,lng){
-    return LINK_URL.replace('${github_url}',GITHUB_URL).replace('${lat}',lat).replace('${lng}',lng);
+function getGithubUrl(lat,lng,locName){
+    return LINK_URL.replace('${github_url}',GITHUB_URL).replace('${lat}',lat).replace('${lng}',lng).replace('${name}',locName);
 }
