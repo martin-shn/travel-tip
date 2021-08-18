@@ -101,18 +101,28 @@ function onGetUserPos() {
 function onPanTo(lat,lng,currLoc) {
     console.log('Panning the Map');
     mapService.panTo(lat, lng);
-    updateCurrLoc(currLoc);
+    updateCurrLoc(currLoc,lat,lng);
     // updateWeather(loc)
 }
 
-function updateCurrLoc(currLoc){
+function updateCurrLoc(currLoc,lat,lng){
     document.querySelector('.curr-location label').innerText=currLoc;
+    document.querySelector('.curr-location label').dataset.lat=lat;
+    document.querySelector('.curr-location label').dataset.lng=lng;
 }
 
 function onDelLoc(locId){
     locService.deleteLoc(locId);
     renderLocTable();
 }
+
+function onCopyLoc(){
+    const lat = document.querySelector('.curr-location label').dataset.lat;
+    const lng = document.querySelector('.curr-location label').dataset.lng;
+    const url = getGithubUrl(lat,lng);
+}
+
+
 // Swal.fire({
 //     title: 'Do you want to save this location in to your favorite list?',
 //     // icon: 'info',

@@ -7,7 +7,8 @@ export const mapService = {
 }
 
 var gMap;
-
+const LINK_URL = 'https://${github_url}/index.html?lat=${lat}&lng=${lng}';
+const GITHUB_URL = 'martin-shn.github.io/travelTip';
 
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     const myLatlng = { lat, lng };
@@ -90,4 +91,8 @@ function _connectGoogleApi() {
         elGoogleApi.onload = resolve;
         elGoogleApi.onerror = () => reject('Google script failed to load')
     })
+}
+
+function getGithubUrl(lat,lng){
+    return LINK_URL.replace('${github_url}',GITHUB_URL).replace('${lat}',lat).replace('${lng}',lng);
 }
