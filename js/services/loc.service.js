@@ -10,9 +10,9 @@ const GOOGLE_GEO_API = 'https://maps.googleapis.com/maps/api/geocode/json?addres
 const locs = storageService.load('travelTipDB') || [];
 
 function searchLoc(loc) {
-    const test = GOOGLE_GEO_API.replace('${loc}', loc).replace('${key}', GEO_LOCATION_API);
+    const url = GOOGLE_GEO_API.replace('${loc}', loc).replace('${key}', GEO_LOCATION_API);
     axios
-        .get(test)
+        .get(url)
         .then((res) => {
             console.log(res.data);
             const existedLoc = locs.findIndex(function (loc, idx) {

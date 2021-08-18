@@ -58,7 +58,7 @@ function onRenderLocations(locs) {
         <td>${loc.name}</td>
         <td>${loc.lat.toFixed(2)}</td>
         <td>${loc.lng.toFixed(2)}</td>
-        <td><button onclick="onPanTo(${loc.lat},${loc.lng})">GO</button></td>
+        <td><button onclick="onPanTo(${loc.lat},${loc.lng},${loc.name})">GO</button></td>
         <td><button onclick="onDelLoc(${loc.id})">Delete</button></td>
         </tr>`;
         })
@@ -96,7 +96,26 @@ function onGetUserPos() {
             console.log('err!!!', err);
         });
 }
-function onPanTo(lat,lng) {
+function onPanTo(lat,lng,currLoc) {
     console.log('Panning the Map');
     mapService.panTo(lat, lng);
+    updateCurrLoc(currLoc);
+    // updateWeather(loc)
 }
+
+
+// Swal.fire({
+//     title: 'Do you want to save this location in to your favorite list?',
+//     // icon: 'info',
+//     html: 'Background color: ' + '<input type="color" class="theme"/>',
+//     showCloseButton: true,
+//     showCancelButton: true,
+//     focusConfirm: false,
+//     confirmButtonText: 'OK',
+//     confirmButtonAriaLabel: 'Thumbs up, great!',
+//     cancelButtonText: 'Cancel',
+//     cancelButtonAriaLabel: 'Thumbs down',
+// })
+//.then((res) => {
+//     if (res.isConfirmed) document.querySelector('body').style.backgroundColor = keepBright(document.querySelector('.theme').value);
+// });
