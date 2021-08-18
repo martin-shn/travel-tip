@@ -3,6 +3,7 @@ export const mapService = {
     initMap,
     addMarker,
     panTo,
+    getCurrPos,
  }
 
 var gMap;
@@ -36,10 +37,14 @@ function panTo(lat, lng) {
     gMap.panTo(laLatLng);
 }
 
-function GetCurrPos(){
-    let currPos;
-    navigator.geolocation.getCurrentPosition((pos)=>{currPos = {lat:pos.coords.latitude,lng:pos.coords.longitude}});
-    return currPos;
+// var currPos;
+function getCurrPos(){
+    return navigator.geolocation.getCurrentPosition((pos)=>{
+        const currPos = {lat:pos.coords.latitude,lng:pos.coords.longitude};
+        return new Promise(currPos);
+    });
+    // console.log('currpos:', currPos, 'a: ', a);
+    // return currPos;
 }
 
 function _connectGoogleApi() {

@@ -7,6 +7,11 @@ window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearch = onSearch;
+window.test = test;
+
+function test(){
+    return mapService.getCurrPos()
+}
 
 function onInit() {
     mapService.initMap()
