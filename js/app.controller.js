@@ -13,6 +13,10 @@ window.onMyLocation = onMyLocation;
 
 
 function onInit() {
+    locService.getLocs().then((locs) => {
+        onRenderLocations(locs);
+        // document.querySelector('.locs').innerText = JSON.stringify(locs)
+    });
     mapService
         .initMap()
         .then(() => {
@@ -54,8 +58,8 @@ function onRenderLocations(locs) {
         <td>${loc.name}</td>
         <td>${loc.lat.toFixed(2)}</td>
         <td>${loc.lng.toFixed(2)}</td>
-        <td><button onclick="onShowLoc(${loc.id})">GO</button></td>
-        <td><button onclick="onDelLoc(${loc.id})">Delte</button></td>
+        <td><button onclick="onPanTo(${loc.lat},${loc.lng})">GO</button></td>
+        <td><button onclick="onDelLoc(${loc.id})">Delete</button></td>
         </tr>`;
         })
         .join('');
@@ -92,7 +96,7 @@ function onGetUserPos() {
             console.log('err!!!', err);
         });
 }
-function onPanTo() {
+function onPanTo(lat,lng) {
     console.log('Panning the Map');
-    mapService.panTo(35.6895, 139.6917);
+    mapService.panTo(lat, lng);
 }
