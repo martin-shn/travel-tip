@@ -53,13 +53,31 @@ function makeId(length = 5) {
 }
 
 function deleteLoc(locId){
-    console.log(locId);
+    // console.log(locId);
     const existedLoc = locs.findIndex(function (loc, idx) {
         return loc.id === locId;
     });
     if (existedLoc >= 0) {
-        locs.splice(existedLoc,1);
-        storageService.save('travelTipDB', locs);
+        Swal.fire({
+                title: 'Are you sure you want to delete this location?',
+                icon: 'question',
+                text: 'Location: ' + locs[existedLoc].name,
+                confirmButtonColor:'red',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText: 'DELETE',
+                confirmButtonAriaLabel: 'Thumbs up, great!',
+                cancelButtonText: 'Cancel',
+                cancelButtonAriaLabel: 'Thumbs down',
+            })
+            .then((res) => {
+                if (res.isConfirmed) {
+                    locs.splice(existedLoc,1);
+                    storageService.save('travelTipDB', locs);
+                }
+            });
+
     }
 }
 
