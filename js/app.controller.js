@@ -150,11 +150,11 @@ function onCopyLoc() {
 
 function onWeatherUpdate(lat,lng){
     weatherService.getWeather(lat, lng).then((res)=>{
-        document.querySelector('.weather').innerHTML=`🌡Temp: ${(res.res.temp-273.15).toFixed(2)}°C <br>
-        <img src='${res.icon}'><br>
-        Feels like: ${(res.res.feels_like-273.15).toFixed(2)}°C <br>
-        Max temp: ${(res.res.temp_max-273.15).toFixed(2)}°C <br>
-        Min temp: ${(res.res.temp_min-273.15).toFixed(2)}°C <br>
+        document.querySelector('.weather label').innerText=`🌡Temp: ${(res.res.temp-273.15).toFixed(2)}°C`;
+        document.querySelector('.weather p').innerText=`Feels like: ${(res.res.feels_like-273.15).toFixed(2)}°C
+        Max temp: ${(res.res.temp_max-273.15).toFixed(2)}°C
+        Min temp: ${(res.res.temp_min-273.15).toFixed(2)}°C
         `;
+        document.querySelector('.weather img').src=res.icon;
     });
 }

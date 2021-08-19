@@ -1,6 +1,26 @@
+@font-face {
+    font-family: Aclonica;
+    src: url('../fonts/Aclonica-Regular.ttf');
+}
+@font-face {
+    font-family: Rubik;
+    src: url('../fonts/Rubik.ttf');
+}
+@font-face {
+    font-family: Secular;
+    src: url('../fonts/SecularOne-Regular.ttf');
+}
 * {
     font-family: sans-serif;
     box-sizing: border-box;
+    font-family: Rubik;
+}
+
+button{
+    cursor: pointer;
+    font-weight: 600;
+    height: 2rem;
+    border: 1px solid rgb(185, 182, 182);
 }
 
 body {
@@ -18,7 +38,7 @@ body {
         '. weather weather map map .'
         '. locs locs map map .';
 
-    grid-template-rows: 4rem 4rem 1fr 1fr;
+    grid-template-rows: 4rem 4rem 8rem 1fr;
     grid-template-columns: 5% repeat(4, 1fr) 5%;
     gap: 15px;
     align-items: center;
@@ -30,6 +50,7 @@ body {
     grid-area: logo;
     font-size: 3rem;
     font-weight: 700;
+    font-family: Secular;
 }
 nav.menu {
     grid-area: nav;
@@ -39,21 +60,26 @@ nav.menu {
 .search::placeholder {
 }
 .search {
+    height: 2rem;
+    padding: 0 10px;
 }
 .btn-search {
+    background-color:rgb(158, 185, 117);
 }
 .my-loc {
 }
 
 .curr-location {
     grid-area: curr-loc;
+    font-family: Aclonica;
+    font-size: 1.5rem;
 }
 .curr-location span {
     font-weight: 600;
 }
 .copy-loc {
     grid-area: btn-copy;
-    height: 2rem;
+    /* height: 2rem; */
     width: 80%;
     justify-self: right;
 }
@@ -62,6 +88,22 @@ nav.menu {
     background-color: aquamarine;
     width: 100%;
     height: 100%;
+    /* text-align: center; */
+    padding: 10px 20px;
+    line-height: 1.5rem;
+}
+.weather label{
+    font-weight: 600;
+    font-size: 1.2em;
+}
+.weather p{
+    margin: 5px 20px 0;
+}
+.weather img{
+    position: relative;
+    top:-9rem;
+    left:20vw;
+    height: 10rem;
 }
 .map {
     grid-area: map;
@@ -73,16 +115,28 @@ nav.menu {
     background-color: cadetblue;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
 }
-.locs-table thead {
+.locs-container table thead th:nth-child(2){
+    width: 10%;
 }
-.locs-table thead th {
+.locs-container table thead th:nth-child(3){
+    width: 10%;
 }
-.locs-table tbody {
+.locs-container table thead th:nth-child(4){
+    width: 15%;
+}
+.locs-container table tbody td:nth-child(4) button{
+    background-color: rgb(158, 185, 117);
+}
+.locs-table button {
+    width: 100%;
+}
+td{
+    padding: 5px 5px;    
 }
 
-
-@media (max-width:500px) {
+@media (max-width: 500px) {
     .container {
         grid-template-areas:
             '. logo logo .'
@@ -91,17 +145,17 @@ nav.menu {
             '. map map .'
             '. weather weather .'
             '. locs locs .';
-    
-        grid-template-rows: 5rem 2rem 2rem 25rem 1fr 1fr;
-        grid-template-columns: 2% repeat(2, 1fr) 2%;
+
+        grid-template-rows: 5rem 3rem 3rem 25rem 9rem 1fr;
+        grid-template-columns: 0% repeat(2, 1fr) 0%;
         gap: 5px;
         height: unset;
     }
 
-    .logo{
+    .logo {
         padding-bottom: 0.5em;
     }
-    nav.menu{
+    nav.menu {
         display: flex;
         justify-self: unset;
     }
@@ -109,7 +163,16 @@ nav.menu {
         width: 100%;
         margin-right: 10px;
     }
-    .btn-search{
+    .btn-search {
         margin-right: 10px;
+    }
+    .curr-location{
+        font-size: 1.1rem;
+    }
+    .weather img{
+        left:50%;
+    }
+    .locs-container{
+        padding: 10px 5px;
     }
 }
